@@ -24,9 +24,9 @@ public class UnitBO {
 
     @ManyToOne
     private FarmBO farm;
-
-    @OneToMany(mappedBy = "unit", fetch = FetchType.EAGER)
-    private List<SensorBO> sensors;
+//
+//    @OneToMany(mappedBy = "unit", fetch = FetchType.EAGER)
+//    private List<SensorBO> sensors;
 
     @OneToMany(mappedBy = "unit")
     private List<ControlBO> controls;

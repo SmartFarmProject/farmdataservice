@@ -1,7 +1,6 @@
 package com.training.smartfarm.farmdataservice.controller;
 
 import com.training.smartfarm.farmdataservice.dto.SensorDTO;
-import com.training.smartfarm.farmdataservice.dto.UnitDTO;
 import com.training.smartfarm.farmdataservice.service.SensorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +18,13 @@ public class SensorController {
     private SensorService sensorService;
 
 
-    @GetMapping("/farms/{farmId}/units/{unitId}/sensors")
-    public List<SensorDTO> findByFarmAndUnitId(@PathVariable String farmId, @PathVariable String unitId) {
+    @GetMapping(value = "/sensors", params = "unitId")
+    public List<SensorDTO> findByUnitId(@RequestParam String unitId) {
         return sensorService.findByUnitId(unitId);
     }
 
 
-    @GetMapping("/farms/{farmId}/units/{unitId}/sensors/{sensorId}")
+    @GetMapping("/sensors/{sensorId}")
     public ResponseEntity<SensorDTO> getById(@PathVariable String farmId, @PathVariable String unitId, @PathVariable String sensorId) {
         SensorDTO sensorDTO = sensorService.findById(sensorId);
         if(sensorDTO == null) {
@@ -36,12 +35,12 @@ public class SensorController {
     }
 
     @GetMapping("/sensors")
-    public List<SensorDTO> findByPhysicalIds() {
-        return sensorService.findByPhysicalIds();
+    public List<SensorDTO> findAll() {
+        return sensorService.findAll();
     }
 
-    @GetMapping("/sensors/{physicalId}")
-    public ResponseEntity<SensorDTO> findByPhysicalId(@PathVariable String physicalId){
+    @GetMapping(value = "/sensors", params = "physicalId")
+    public ResponseEntity<SensorDTO> findByPhysicalId(@RequestParam String physicalId){
         SensorDTO sensorDTO = sensorService.findByPhysicalId(physicalId);
         if(sensorDTO == null) {
             return new ResponseEntity<>(NOT_FOUND);
@@ -51,7 +50,7 @@ public class SensorController {
     }
 
 
-    @PostMapping("/farms/{farmId}/units/{unitId}/sensors")
+    @PostMapping("/sensors")
     public ResponseEntity<SensorDTO> create(@RequestBody SensorDTO sensorDTO, @PathVariable String farmId, @PathVariable String unitId) {
         sensorDTO.setUnitId(unitId);
         SensorDTO newSensorDTO = sensorService.create(sensorDTO);
@@ -62,10 +61,9 @@ public class SensorController {
         }
     }
 
-    @PutMapping("/farms/{farmId}/units/{unitId}/sensors/{sensorId}")
-    public ResponseEntity<SensorDTO> update(@RequestBody SensorDTO sensorDTO, @PathVariable String farmId, @PathVariable String unitId, @PathVariable String sensorId) {
+    @PutMapping("/sensors/{sensorId}")
+    public ResponseEntity<SensorDTO> update(@RequestBody SensorDTO sensorDTO, @PathVariable String sensorId) {
         sensorDTO.setId(sensorId);
-        sensorDTO.setUnitId(unitId);
         SensorDTO updatedSensorDTO = sensorService.update(sensorDTO);
         if(updatedSensorDTO == null) {
             return new ResponseEntity<>(NOT_FOUND);
@@ -74,8 +72,8 @@ public class SensorController {
         }
     }
 
-    @DeleteMapping("/farms/{farmId}/units/{unitId}/sensors/{sensorId}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable String farmId, @PathVariable String unitId, @PathVariable String sensorId) {
+    @DeleteMapping("/sensors/{sensorId}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable String sensorId) {
         SensorDTO deletedSensorDTO = sensorService.deleteById(sensorId);
         if(deletedSensorDTO == null) {
             return new ResponseEntity<>(NOT_FOUND);
