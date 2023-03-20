@@ -36,8 +36,18 @@ public class SensorController {
     }
 
     @GetMapping("/sensors")
-    public List<SensorDTO> findByPhysicalIds(@RequestParam List<String> physicalIds) {
-        return sensorService.findByPhysicalIds(physicalIds);
+    public List<SensorDTO> findByPhysicalIds() {
+        return sensorService.findByPhysicalIds();
+    }
+
+    @GetMapping("/sensors/{physicalId}")
+    public ResponseEntity<SensorDTO> findByPhysicalId(@PathVariable String physicalId){
+        SensorDTO sensorDTO = sensorService.findByPhysicalId(physicalId);
+        if(sensorDTO == null) {
+            return new ResponseEntity<>(NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(sensorDTO, OK);
+        }
     }
 
 

@@ -35,8 +35,13 @@ public class SensorService {
     }
 
     @Transactional(readOnly = true)
-    public List<SensorDTO> findByPhysicalIds(List<String> physicalIds) {
-        return sensorRepository.findByPhysicalIdIn(physicalIds).stream().map(SENSOR_MAPPER::sensorBOToSensorDTO).collect(toList());
+    public List<SensorDTO> findByPhysicalIds() {
+        return sensorRepository.findAll().stream().map(SENSOR_MAPPER::sensorBOToSensorDTO).collect(toList());
+    }
+
+    @Transactional(readOnly = true)
+    public SensorDTO findByPhysicalId(String physicalId) {
+        return SENSOR_MAPPER.sensorBOToSensorDTO(sensorRepository.findByPhysicalId(physicalId));
     }
 
     @Transactional

@@ -10,4 +10,6 @@ public interface SensorRepository extends JpaRepository<SensorBO, String> {
     List<SensorBO> findByUnitId(String unitId);
 
     List<SensorBO> findByPhysicalIdIn(List<String> physicalIds);
+
+    SensorBO findByPhysicalId(String physicalId);
 }
