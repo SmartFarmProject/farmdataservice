@@ -2,6 +2,7 @@ package com.training.smartfarm.farmdataservice.controller;
 
 import com.training.smartfarm.farmdataservice.dto.SensorDTO;
 import com.training.smartfarm.farmdataservice.service.SensorService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
+@Slf4j
 @RestController
 public class SensorController {
 
@@ -36,11 +38,13 @@ public class SensorController {
 
     @GetMapping("/sensors")
     public List<SensorDTO> findAll() {
+        log.info("Performing load of all sensors");
         return sensorService.findAll();
     }
 
     @GetMapping(value = "/sensors", params = "physicalId")
     public ResponseEntity<SensorDTO> findByPhysicalId(@RequestParam String physicalId){
+        log.info("Performing find by physical id : {}", physicalId);
         SensorDTO sensorDTO = sensorService.findByPhysicalId(physicalId);
         if(sensorDTO == null) {
             return new ResponseEntity<>(NOT_FOUND);
