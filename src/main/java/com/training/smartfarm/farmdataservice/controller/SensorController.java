@@ -27,7 +27,7 @@ public class SensorController {
 
 
     @GetMapping("/sensors/{sensorId}")
-    public ResponseEntity<SensorDTO> getById(@PathVariable String farmId, @PathVariable String unitId, @PathVariable String sensorId) {
+    public ResponseEntity<SensorDTO> getById(@PathVariable String sensorId) {
         SensorDTO sensorDTO = sensorService.findById(sensorId);
         if(sensorDTO == null) {
             return new ResponseEntity<>(NOT_FOUND);
