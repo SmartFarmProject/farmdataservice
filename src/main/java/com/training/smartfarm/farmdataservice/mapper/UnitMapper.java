@@ -21,7 +21,7 @@ public class UnitMapper {
                 .id(unitBO.getId())
                 .name(unitBO.getName())
                 .farmId(unitBO.getFarm().getId())
-                .sensors(ofNullable(unitBO.getSensors()).orElse(emptyList()).stream().map(SENSOR_MAPPER::sensorBOToSensorDTO).collect(toList()))
+//                .sensors(ofNullable(unitBO.getSensors()).orElse(emptyList()).stream().map(SENSOR_MAPPER::sensorBOToSensorDTO).collect(toList()))
                 .build();
     }
 

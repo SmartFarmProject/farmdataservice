@@ -15,7 +15,7 @@ public class SensorMapper {
                 .physicalId(sensorBO.getPhysicalId())
                 .dataSourceFieldName(sensorBO.getDataSourceFieldName())
                 .sensorType(SensorDTO.SensorType.valueOf(sensorBO.getSensorType()))
-                .unitId(sensorBO.getUnit().getId())
+                .unitId(sensorBO.getUnitId())
                 .build();
     }
 
@@ -28,7 +28,7 @@ public class SensorMapper {
                 .physicalId(sensorDTO.getPhysicalId())
                 .dataSourceFieldName(sensorDTO.getDataSourceFieldName())
                 .sensorType(sensorDTO.getSensorType().name())
-                .unit(UnitBO.builder().id(sensorDTO.getUnitId()).build())
+                .unitId(sensorDTO.getUnitId())
                 .build();
     }
 }

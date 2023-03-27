@@ -35,7 +35,7 @@ public class SensorService {
     }
 
     @Transactional(readOnly = true)
-    public List<SensorDTO> findByPhysicalIds() {
+    public List<SensorDTO> findAll() {
         return sensorRepository.findAll().stream().map(SENSOR_MAPPER::sensorBOToSensorDTO).collect(toList());
     }
 
@@ -52,7 +52,7 @@ public class SensorService {
         }
 
         SensorBO sensorBO = SENSOR_MAPPER.sensorDTOToSensorBO(sensorDTO);
-        sensorBO.setUnit(unitBO);
+//        sensorBO.setUnit(unitBO);
 
         SensorBO newSensorBO = sensorRepository.save(sensorBO);
         return SENSOR_MAPPER.sensorBOToSensorDTO(newSensorBO);
