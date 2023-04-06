@@ -20,6 +20,7 @@ public class SensorBO {
     @Id
     @GeneratedValue(strategy = UUID)
     private String id;
+    @Column(unique = true)
     private String physicalId;
     private String sensorType;
     private String dataSourceFieldName;

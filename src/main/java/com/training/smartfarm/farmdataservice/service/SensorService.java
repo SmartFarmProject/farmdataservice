@@ -3,6 +3,8 @@ package com.training.smartfarm.farmdataservice.service;
 import com.training.smartfarm.farmdataservice.bo.SensorBO;
 import com.training.smartfarm.farmdataservice.bo.UnitBO;
 import com.training.smartfarm.farmdataservice.dto.SensorDTO;
+import com.training.smartfarm.farmdataservice.event.SensorEvent;
+import com.training.smartfarm.farmdataservice.event.producer.SensorEventProducer;
 import com.training.smartfarm.farmdataservice.repository.SensorRepository;
 import com.training.smartfarm.farmdataservice.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.training.smartfarm.farmdataservice.event.SensorEvent.*;
 import static com.training.smartfarm.farmdataservice.mapper.MapperRegistry.SENSOR_MAPPER;
 import static java.util.stream.Collectors.toList;
 
@@ -21,6 +24,8 @@ public class SensorService {
     private SensorRepository sensorRepository;
     @Autowired
     private UnitRepository unitRepository;
+    @Autowired
+    private SensorEventProducer sensorEventProducer;
 
 
     @Transactional(readOnly = true)
@@ -55,7 +60,9 @@ public class SensorService {
 //        sensorBO.setUnit(unitBO);
 
         SensorBO newSensorBO = sensorRepository.save(sensorBO);
-        return SENSOR_MAPPER.sensorBOToSensorDTO(newSensorBO);
+        SensorDTO createdSensorDTO = SENSOR_MAPPER.sensorBOToSensorDTO(newSensorBO);
+        pushSensorEvent(createdSensorDTO, CREATED_EVENT_TYPE);
+        return createdSensorDTO;
     }
 
     @Transactional
@@ -68,7 +75,9 @@ public class SensorService {
         }
 
         SensorBO newSensorBO = sensorRepository.save(SENSOR_MAPPER.sensorDTOToSensorBO(sensorDTO));
-        return SENSOR_MAPPER.sensorBOToSensorDTO(newSensorBO);
+        SensorDTO updatedSensorDTO = SENSOR_MAPPER.sensorBOToSensorDTO(newSensorBO);
+        pushSensorEvent(updatedSensorDTO, UPDATED_EVENT_TYPE);
+        return updatedSensorDTO;
     }
 
     @Transactional
@@ -80,6 +89,13 @@ public class SensorService {
         }
 
         sensorRepository.delete(existingSensorBO);
-        return SENSOR_MAPPER.sensorBOToSensorDTO(existingSensorBO);
+
+        SensorDTO deletedSensorDTO = SENSOR_MAPPER.sensorBOToSensorDTO(existingSensorBO);
+        pushSensorEvent(deletedSensorDTO, DELETED_EVENT_TYPE);
+        return deletedSensorDTO;
+    }
+
+    private void pushSensorEvent(SensorDTO sensorDTO, String eventType) {
+        sensorEventProducer.sendMessage(SensorEvent.builder().eventType(eventType).sensorDTO(sensorDTO).build());
     }
 }
