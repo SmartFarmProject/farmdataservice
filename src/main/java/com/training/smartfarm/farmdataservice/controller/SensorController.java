@@ -55,8 +55,7 @@ public class SensorController {
 
 
     @PostMapping("/sensors")
-    public ResponseEntity<SensorDTO> create(@RequestBody SensorDTO sensorDTO, @PathVariable String farmId, @PathVariable String unitId) {
-        sensorDTO.setUnitId(unitId);
+    public ResponseEntity<SensorDTO> create(@RequestBody SensorDTO sensorDTO) {
         SensorDTO newSensorDTO = sensorService.create(sensorDTO);
         if(newSensorDTO == null) {
             return new ResponseEntity<>(NOT_FOUND);
