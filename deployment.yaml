@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: farm-data-service
+  labels:
+    app: farm-data-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: farm-data-service
+  template:
+    metadata:
+      labels:
+        app: farm-data-service
+    spec:
+      containers:
+        - name: farm-data-service
+          image: thebestsmartfarm/farm-data-service
+          env:
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-service:9092"
+            - name: SPRING_CLOUD_DISCOVERY_ENABLED
+              value: 'false'
+            - name: SPRING_CLOUD_GATEWAY_ENABLED
+              value: 'false'
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: farm-data-service
+spec:
+  selector:
+    app: farm-data-service
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
